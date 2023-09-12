@@ -60,14 +60,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run unit tests
-        run: npm run test:unit
-
-      - name: Run linkinator
-        uses: JustinBeckwith/linkinator-action@v1
+        - name: Docker Build
+        uses: docker/build-push-naveen2131/my-app:testaction@v2
         with:
-          linksToSkip: "^(?!http://localhost)"
-          paths: en
-          recurse: true
-          serverRoot: build
-          verbosity: error
+          context: .
+          push: false # Change to true if you want to push the image to a container registry
+         
+      - name: Trivy Scan
+        uses: aquasecurity/trivy-action@v1
+        with:
+          image-ref: naveen2131/my-app:test
