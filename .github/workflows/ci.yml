@@ -68,6 +68,6 @@ jobs:
           tags: naveen2131/my-app:test
       
       - name: Trivy Scan
-        uses: aquasecurity/trivy-action@v0.1
+        uses: aquasecurity/trivy-action@v0.45.0
         with:
           image-ref: naveen2131/my-app:test
