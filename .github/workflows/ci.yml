@@ -60,7 +60,7 @@ jobs:
       - name: Build
         run: npm run build
 
-        - name: Docker Build
+      - name: Docker Build
         uses: docker/build-push-naveen2131/my-app:testaction@v2
         with:
           context: .
