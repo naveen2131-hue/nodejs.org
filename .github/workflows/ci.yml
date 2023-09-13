@@ -69,9 +69,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Trivy
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: naveen2131/my-app:gitleaks
+        run: |
+          # Install Trivy
+          curl -sfL https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.19.0_Linux-64bit.tar.gz | tar -zxvf - -C /usr/local/bin/ trivy
 
       - name: Run Trivy Scan
-        run: trivy image -q --exit-code 1 naveen2131/my-app:gitleaks
+        run: /usr/local/bin/trivy image -q --exit-code 1 naveen2131/my-app:gitleaks
