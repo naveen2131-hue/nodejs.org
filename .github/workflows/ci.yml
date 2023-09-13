@@ -60,7 +60,18 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Trivy Scan
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: naveen2131/my-app:gitleaks
+        trivy_scan:
+        name: Trivy Security Scan
+        runs-on: ubuntu-latest
+    
+        steps:
+          - name: Checkout repository
+            uses: actions/checkout@v2
+    
+          - name: Set up Trivy
+            uses: aquasecurity/trivy-action@v1 # Use the latest stable version
+            with:
+              image-ref: naveen2131/my-app:gitleaks # Replace with the image reference you want to scan
+    
+          - name: Run Trivy Scan
+            run: trivy image -q --exit-code 1 naveen2131/my-app:gitleaks
