@@ -70,8 +70,14 @@ jobs:
 
       - name: Set up Trivy
         run: |
-          # Install Trivy
-          curl -sfL https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.19.0_Linux-64bit.tar.gz | tar -zxvf - -C /usr/local/bin/ trivy
+          # Retry the download up to 3 times
+          retries=3
+          for i in $(seq "$retries"); do
+            echo "Attempting to download Trivy (attempt $i/$retries)..."
+            curl -sfL https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.19.0_Linux-64bit.tar.gz | tar -zxvf - -C /usr/local/bin/ trivy && break
+            echo "Download attempt $i failed. Retrying in 5 seconds..."
+            sleep 5
+          done
 
       - name: Run Trivy Scan
         run: /usr/local/bin/trivy image -q --exit-code 1 naveen2131/my-app:gitleaks
