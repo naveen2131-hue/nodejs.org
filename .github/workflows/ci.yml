@@ -92,6 +92,6 @@ jobs:
           sonar-scanner \
             -Dsonar.projectKey=nodejs.org \
             -Dsonar.sources=. \
-            -Dsonar.host.url=http://20.203.85.49:9000 \
+            -Dsonar.host.url=http://20.203.85.49:9000/ \
             -Dsonar.login=123b4ece48f5524e46ea29057c539eddbcdf609e
 
