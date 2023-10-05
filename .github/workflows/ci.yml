@@ -71,3 +71,27 @@ jobs:
       - name: Run Trivy Scan
         run: |
           docker run --rm -v $PWD:/workdir aquasec/trivy:latest image -q --exit-code 1 naveen2131/my-app:gitleaks
+
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/*"
+          cache: npm
+
+      - name: SonarQube Scan
+        run: |
+          npm install -g sonarqube-scanner
+          sonar-scanner \
+            -Dsonar.projectKey=nodejs.org \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://20.203.85.49:9000 \
+            -Dsonar.login=123b4ece48f5524e46ea29057c539eddbcdf609e
+
