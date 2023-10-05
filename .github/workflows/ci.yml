@@ -88,7 +88,7 @@ jobs:
 
       - name: SonarQube Scan
         run: |
-          npm install -g sonarqube-scanner
+          npm install -g sonar-scanner
           sonar-scanner \
             -Dsonar.projectKey=nodejs.org \
             -Dsonar.sources=. \
