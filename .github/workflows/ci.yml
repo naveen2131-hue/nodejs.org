@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "::add-matcher::.github/workflows/remark-lint-problem-matcher.json"
           npm run test:lint
+          
   test:
     name: Node on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -69,12 +70,10 @@ jobs:
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
+        with:
+          sonar-host-url: http://20.203.85.49:9000/
+          sonar-login: c7a3c808773c0975d4ccb5250355e29297b27cf4
+          sonar-project-key: nodejs.org
+          sonar-project-name: nodejs.org
+          sonar-sources: .
 
-      - name: SonarQube Scan
-        run: |
-          sonar-scanner \
-            -Dsonar.projectKey=nodejs.org \
-            -Dsonar.projectName=nodejs.org \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://20.203.85.49:9000/ \
-            -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
