@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Specify the Node.js version you need
+          node-version: "14" 
           cache: npm
 
       - name: Install npm dependencies
@@ -49,7 +49,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Specify the Node.js version you need
+          node-version: "14"
           cache: npm
 
       - run: java -version
@@ -73,26 +73,27 @@ jobs:
           docker run --rm -v $PWD:/workdir aquasec/trivy:latest image -q --exit-code 1 naveen2131/my-app:gitleaks
 
   sonarqube:
-    name: SonarQube Analysis
-    runs-on: ubuntu-latest
+  name: SonarQube Analysis
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14" # Specify the Node.js version you need
-          cache: npm
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: "14" 
+        cache: npm
 
-      - name: Install Sonar Scanner
-        run: npm install -g sonarqube-scanner
+    - name: Install Sonar Scanner
+      run: |
+        npm install -g sonarqube-scanner
 
-      - name: SonarQube Scan
-        run: |
-          sonarqube-scanner -X \
-            -Dsonar.projectKey=nodejs.org \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://20.203.85.49:9000/ \
-            -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
+    - name: SonarQube Scan
+      run: |
+        sonarqube-scanner -X \
+          -Dsonar.projectKey=nodejs.org \
+          -Dsonar.sources=. \
+          -Dsonar.host.url=http://20.203.85.49:9000/ \
+          -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
