@@ -76,4 +76,4 @@ jobs:
       - name: Trigger SonarQube Analysis
         run: |
           SONARQUBE_WEBHOOK_URL="http://20.203.85.49:9000/webhooks?nodejs.org"
-          curl -X POST -u +aJ5btEAf6ttVmY6y+LdAk0aYyys0jj5BmIzsCGCMLc= $SONARQUBE_WEBHOOK_URL
+          curl -X POST -u 2K7Wdpe4vbiHvxrssFOrjPS9Nfg2M91fknsuWQ+15mk= $SONARQUBE_WEBHOOK_URL
