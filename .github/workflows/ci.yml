@@ -78,6 +78,7 @@ jobs:
           npm install -g sonarqube-scanner
           sonar-scanner \
             -Dsonar.projectKey=nodejs.org \
+            -Dsonar.projectVersion=1.0
             -Dsonar.sources=. \
             -Dsonar.host.url=http://20.203.85.49:9000/ \
             -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
