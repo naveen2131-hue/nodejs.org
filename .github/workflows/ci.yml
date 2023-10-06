@@ -76,4 +76,4 @@ jobs:
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         with:
-          sonar-token: ${{ secrets.sonar-login }}
+          sonar-token: ${{sonar_login}}
