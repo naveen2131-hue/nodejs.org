@@ -71,7 +71,9 @@ jobs:
       - name: Set up environment variables
         run: |
           echo "SONAR_HOST_URL=http://20.203.85.49:9000/" >> $GITHUB_ENV
-          echo "SONAR_TOKEN=${{ secrets.sonar-login }}" >> $GITHUB_ENV
+          echo "SONAR_TOKEN=${{sonar_login}}" >> $GITHUB_ENV
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
+        with:
+          sonar-token: ${{ secrets.sonar-login }}
