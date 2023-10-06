@@ -65,13 +65,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
 
       - name: Set up environment variables
         run: |
           echo "SONAR_HOST_URL=${{ secrets.SONAR_HOST_URL }}" >> $GITHUB_ENV
           echo "SONAR_TOKEN=${{ secrets.SONAR_LOGIN }}" >> $GITHUB_ENV
-
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
