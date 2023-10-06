@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Specify the Node.js version you need
+          node-version: "14"
           cache: npm
 
       - name: Install npm dependencies
@@ -32,6 +32,7 @@ jobs:
         run: |
           echo "::add-matcher::.github/workflows/remark-lint-problem-matcher.json"
           npm run test:lint
+
   test:
     name: Node on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -48,7 +49,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Specify the Node.js version you need
+          node-version: "14"
           cache: npm
 
       - run: java -version
@@ -67,12 +68,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: npm
+
+      - name: Install SonarQube Scanner
+        run: npm install -g sonarqube-scanner
+
       - name: SonarQube Scan
         run: |
-          sonarqube-scanner -X \
+          sonar-scanner -X \
             -Dsonar.projectKey=nodejs.org \
             -Dsonar.sources=. \
             -Dsonar.host.url=http://20.203.85.49:9000/ \
