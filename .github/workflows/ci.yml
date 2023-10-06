@@ -86,7 +86,7 @@ jobs:
           node-version: "lts/*"
           cache: npm
 
-     - name: SonarQube Scan
+      - name: SonarQube Scan
   run: |
     npm install -g sonar-scanner
     sonar-scanner -X \
@@ -94,4 +94,5 @@ jobs:
       -Dsonar.sources=. \
       -Dsonar.host.url=http://20.203.85.49:9000/ \
       -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
+
 
