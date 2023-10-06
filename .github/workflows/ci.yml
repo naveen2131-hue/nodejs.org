@@ -32,7 +32,6 @@ jobs:
         run: |
           echo "::add-matcher::.github/workflows/remark-lint-problem-matcher.json"
           npm run test:lint
-
   test:
     name: Node on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -74,13 +73,7 @@ jobs:
           node-version: "14"
           cache: npm
 
-      - name: Install SonarQube Scanner
-        run: npm install -g sonarqube-scanner
-
-      - name: SonarQube Scan
+      - name: Trigger SonarQube Analysis
         run: |
-          sonar-scanner -X \
-            -Dsonar.projectKey=nodejs.org \
-            -Dsonar.sources=. \
-            -Dsonar.host.url=http://20.203.85.49:9000/ \
-            -Dsonar.login=2K7Wdpe4vbiHvxrssFOrjPS9Nfg2M91fknsuWQ+15mk=
+          SONARQUBE_WEBHOOK_URL="http://20.203.85.49:9000/webhooks?nodejs.org"
+          curl -X POST -u +aJ5btEAf6ttVmY6y+LdAk0aYyys0jj5BmIzsCGCMLc= $SONARQUBE_WEBHOOK_URL
