@@ -59,9 +59,11 @@ jobs:
 
       - name: Build
         run: npm run build
-  
-  jobs:
+
   sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
