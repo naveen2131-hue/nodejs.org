@@ -1,24 +1,98 @@
-sonarqube:
-  name: SonarQube Analysis
-  runs-on: ubuntu-latest
+name: CI
 
-  steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: "lts/*"
-        cache: npm
+env:
+  FORCE_COLOR: 2
 
-    - name: Install Sonar Scanner
-      run: npm install -g sonar-scanner
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
 
-    - name: SonarQube Scan
-      run: |
-        sonar-scanner -X \
-          -Dsonar.projectKey=nodejs.org \
-          -Dsonar.sources=. \
-          -Dsonar.host.url=http://20.203.85.49:9000/ \
-          -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Specify the Node.js version you need
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Lint
+        run: |
+          echo "::add-matcher::.github/workflows/remark-lint-problem-matcher.json"
+          npm run test:lint
+
+  test:
+    name: Node on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Specify the Node.js version you need
+          cache: npm
+
+      - run: java -version
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  trivy_scan:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Trivy Scan
+        run: |
+          docker run --rm -v $PWD:/workdir aquasec/trivy:latest image -q --exit-code 1 naveen2131/my-app:gitleaks
+
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14" # Specify the Node.js version you need
+          cache: npm
+
+      - name: Install Sonar Scanner
+        run: npm install -g sonarqube-scanner
+
+      - name: SonarQube Scan
+        run: |
+          sonarqube-scanner -X \
+            -Dsonar.projectKey=nodejs.org \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://20.203.85.49:9000/ \
+            -Dsonar.login=9f7e02a626cdfdb8e62471a13b73a7cab533049a
