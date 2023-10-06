@@ -59,11 +59,9 @@ jobs:
 
       - name: Build
         run: npm run build
-
+  
+  jobs:
   sonarqube:
-    name: SonarQube Analysis
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -71,9 +69,8 @@ jobs:
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         with:
-          sonar-host-url: http://20.203.85.49:9000/
-          sonar-login: c7a3c808773c0975d4ccb5250355e29297b27cf4
+          sonar-host-url: ${{ secrets.SONAR_HOST_URL }}
+          sonar-login: ${{ secrets.SONAR_TOKEN }}
           sonar-project-key: nodejs.org
           sonar-project-name: nodejs.org
           sonar-sources: .
-
