@@ -52,9 +52,12 @@ jobs:
 
       - name: Set Workflow Status
         run: |
+          echo "Quality Gate Status: ${{ steps.sonarqube-quality-gate.outputs.quality_gate_status }}"
           if [[ "${{ steps.sonarqube-quality-gate.outputs.quality_gate_status }}" == "failed" ]]; then
             echo "Setting workflow status to failed."
             exit 1
           else
             echo "Setting workflow status to succeeded."
-          fi
+            fi
+
+
