@@ -37,13 +37,24 @@ jobs:
             -Dsonar.login=58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061
 
       - name: Check SonarQube Quality Gate
+        id: sonarqube-quality-gate
         run: |
           QUALITY_GATE_STATUS=$(curl -s "http://20.203.85.49:9000/api/qualitygates/project_status?projectKey=nodejs.org" -u "58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061:")
           echo "$QUALITY_GATE_STATUS"
 
           if [[ "$QUALITY_GATE_STATUS" != *"\"status\":\"OK\""* ]]; then
             echo "SonarQube Quality Gate check failed."
-            exit 1
+            echo "::set-output name=quality_gate_status::failed"
           else
             echo "SonarQube Quality Gate check passed."
+            echo "::set-output name=quality_gate_status::passed"
+          fi
+
+      - name: Set Workflow Status
+        run: |
+          if [[ "${{ steps.sonarqube-quality-gate.outputs.quality_gate_status }}" == "failed" ]]; then
+            echo "Setting workflow status to failed."
+            exit 1
+          else
+            echo "Setting workflow status to succeeded."
           fi
