@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone repository
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: "lts/*"
+          node-version: "14" # Specify the Node.js version you need
           cache: npm
 
       - name: Install npm dependencies
@@ -32,7 +32,7 @@ jobs:
         run: |
           echo "::add-matcher::.github/workflows/remark-lint-problem-matcher.json"
           npm run test:lint
-          
+
   test:
     name: Node on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -47,9 +47,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: "lts/*"
+          node-version: "14" # Specify the Node.js version you need
           cache: npm
 
       - run: java -version
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build
         run: npm run build
-
+        
   sonarqube:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
@@ -68,11 +68,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          sonar-host-url: http://20.203.85.49:9000/
-          sonar-login: c7a3c808773c0975d4ccb5250355e29297b27cf4
-          sonar-project-key: nodejs.org
-          sonar-project-name: nodejs.org
-          sonar-sources: .
+          node-version: "14" 
+          cache: npm
+
+      - name: Install Sonar Scanner
+        run: npm install -g sonar-scanner
+
+      - name: SonarQube Scan
+        run: |
+          sonar-scanner -X \
+            -Dsonar.projectKey=nodejs.org \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://20.203.85.49:9000/ \
+            -Dsonar.login=58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061
