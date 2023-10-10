@@ -44,4 +44,6 @@ jobs:
           if [[ "$QUALITY_GATE_STATUS" != *"\"status\":\"OK\""* ]]; then
             echo "SonarQube Quality Gate check failed."
             exit 1
+          else
+            echo "SonarQube Quality Gate check passed."
           fi
