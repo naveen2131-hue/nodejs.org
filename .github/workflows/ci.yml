@@ -10,7 +10,7 @@ on:
 env:
   FORCE_COLOR: 2
 
-jobs:   
+jobs:
   sonarqube:
     name: SonarQube Analysis
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" 
+          node-version: "14"
           cache: npm
 
       - name: Install Sonar Scanner
@@ -35,3 +35,13 @@ jobs:
             -Dsonar.sources=. \
             -Dsonar.host.url=http://20.203.85.49:9000/ \
             -Dsonar.login=58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061
+
+      - name: Check SonarQube Quality Gate
+        run: |
+          QUALITY_GATE_STATUS=$(curl -s "http://20.203.85.49:9000/api/qualitygates/project_status?projectKey=nodejs.org" -u "58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061:")
+          echo "$QUALITY_GATE_STATUS"
+
+          if [[ "$QUALITY_GATE_STATUS" != *"\"status\":\"OK\""* ]]; then
+            echo "SonarQube Quality Gate check failed."
+            exit 1
+          fi
