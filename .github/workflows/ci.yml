@@ -38,11 +38,11 @@ jobs:
 
       - name: Generate SBOM
         run: |
-          npm install -g cyclonedx-bom
-          cyclonedx-bom -o sbom.xml
+          npm install -g @cyclonedx/cdxgen@8.5.0
+          cdxgen -r -o sbom.xml
 
       - name: Upload SBOM to Dependency-Track
         env:
           DEPENDENCY_TRACK_API_KEY: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF 
         run: |
-          curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" https://20.233.94.210/api/v1/scan
+          curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210/api/v1/scan
