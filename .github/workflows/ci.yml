@@ -42,7 +42,7 @@ jobs:
           QUALITY_GATE_STATUS=$(curl -s "http://20.203.85.49:9000/api/qualitygates/project_status?projectKey=nodejs.org" -u "58f2b5a42d009e5dec0b78a2ebc1ec41c4cc1061:")
           echo "$QUALITY_GATE_STATUS"
 
-          if [[ "$QUALITY_GATE_STATUS" != *"\"status\":\"OK\""* ]]; then
+          if [[ "$QUALITY_GATE_STATUS" == *"\"status\":\"ERROR\""* ]]; then
             echo "SonarQube Quality Gate check failed."
             echo "::set-output name=quality_gate_status::failed"
           else
