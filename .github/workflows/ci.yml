@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -23,7 +22,6 @@ jobs:
           cdxgen -r -o sbom.xml
 
       - name: Upload SBOM to Dependency-Track
-        env:
-          DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
         run: |
-          curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210/api/v1/scan
+          curl -X POST -F "file=@./sbom.xml" -H "Authorization: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF " http://20.233.94.210/api/v1/scan
+
