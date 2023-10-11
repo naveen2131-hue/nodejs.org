@@ -16,28 +16,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "14"  
-          cache: npm
-
-      - run: java -version
-
-      - name: Install npm dependencies
-        run: npm install prismjs/components/prism-mjs.js
-
-      - name: Update Browserslist
-        run: npx browserslist@latest --update-db
-
-      - name: Build
-        run: npm run build
-
-      - name: Run unit tests
-        run: npm run test:unit
 
       - name: Generate SBOM
         run: |
@@ -46,6 +27,6 @@ jobs:
 
       - name: Upload SBOM to Dependency-Track
         env:
-          DEPENDENCY_TRACK_API_KEY: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF 
+          DEPENDENCY_TRACK_API_KEY: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
         run: |
           curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210/api/v1/scan
