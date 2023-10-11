@@ -30,6 +30,9 @@ jobs:
       - name: Install npm dependencies
         run: npm install prismjs
 
+      - name: Update Browserslist
+        run: npx browserslist@latest --update-db
+
       - name: Build
         run: npm run build
 
@@ -38,10 +41,11 @@ jobs:
 
       - name: Generate SBOM
         run: |
-          npm install -g cyclonedx-bom
-          cyclonedx-bom -o sbom.xml
+          npm install -g @cyclonedx/cdxgen@8.5.0
+          cdxgen -r -o sbom.xml
+
       - name: Upload SBOM to Dependency-Track
         env:
-          DEPENDENCY_TRACK_API_KEY: 1zASL2cPu2u9ArWBwQUNF1qsmAM8Gmc0 
+          DEPENDENCY_TRACK_API_KEY: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF 
         run: |
           curl -X POST -F "file=@./sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210/api/v1/scan
