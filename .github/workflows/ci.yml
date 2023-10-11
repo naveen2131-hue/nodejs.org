@@ -45,4 +45,4 @@ jobs:
         env:
           DEPENDENCY_TRACK_API_KEY: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF 
         run: |
-          curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210/api/v1/scan
+          curl -X POST -F "file=@sbom.xml" -H "Authorization: $DEPENDENCY_TRACK_API_KEY" http://20.233.94.210
