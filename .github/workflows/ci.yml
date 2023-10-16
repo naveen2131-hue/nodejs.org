@@ -1,4 +1,4 @@
-name: "Validate Gradle Wrapper"
+name: "Gitleaks"
 on:
   push:
     branches:
