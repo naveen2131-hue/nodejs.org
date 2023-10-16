@@ -1,4 +1,4 @@
-name: "Gitleaks"
+name: "Gitleaks Scan"
 on:
   push:
     branches:
