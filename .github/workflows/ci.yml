@@ -1,27 +1,37 @@
-name: CI
-
+name: "Validate Gradle Wrapper"
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
-  workflow_dispatch:
+    branches:
+      - master
+  workflow_dispatch: 
 
 jobs:
-  build:
-    name: Build and SBOM Generation
+  validation:
+    name: "Validation"
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
 
-      - name: Generate SBOM
+      - name: Setup Gitleaks
+        id: gitleaks
         run: |
-          npm install -g @cyclonedx/cdxgen@8.5.0
-          cdxgen -r -o sbom.xml
+          curl -LO "https://github.com/zricethezav/gitleaks/releases/download/v7.2.0/gitleaks-linux-amd64"
+          chmod +x gitleaks-linux-amd64
+          sudo mv gitleaks-linux-amd64 /usr/local/bin/gitleaks
 
-      - name: Upload SBOM to Dependency-Track
+      - name: Gitleaks Scan
         run: |
-          curl -X POST -F "file=@./sbom.xml" -H "Authorization: LlhGj7VDHYtjUbhxh0caLaI4dff2W6wF " http://20.233.94.210/api/v1/scan
+          # Debug output
+          echo "Current branch: $(git branch --show-current)"
+          git log --oneline
 
+          git log --format="%H" --reverse | while read commit_hash; do
+            echo "Scanning commit: $commit_hash"
+            git checkout $commit_hash
+            gitleaks --path . --verbose
+          done
+          git checkout ${{ github.ref }}
