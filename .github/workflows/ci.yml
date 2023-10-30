@@ -1,4 +1,4 @@
-name: Maven Build and Dependabot Scan
+name: ci
 
 on:
   push:
@@ -32,17 +32,15 @@ jobs:
         with:
           github_token: ${{ secrets.SECRET_TOKEN }}
 
-    steps:               
       - name: Dependabot Alert CSV Export
         uses: ShamKarthikS-Hexaware/dependabot-alert-export@v1.0
         with:        
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
-          org_name: 'ORG_NAME'
-          repo_name: 'REPO_NAME'
+          GITHUB_TOKEN: ${{ secrets.SECRET_TOKEN }}
+          repo_name: 'nodejs.org'
           csv_path: data/vulnerability.csv
-          
+
       - name: Upload Vulnerability report
         uses: actions/upload-artifact@v3
         with:
            name: vulnerability_report
-           path: data/vulnerability.csv          
+           path: data/vulnerability.csv
