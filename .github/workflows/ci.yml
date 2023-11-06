@@ -1,48 +1,37 @@
-name: Maven Build and Dependabot Scan
+name: CI
 
 on:
   push:
     branches:
       - main
+  pull_request:
+  workflow_dispatch:
+
+env:
+  FORCE_COLOR: 2
 
 jobs:
-  maven_build:
+  build:
+    name: Build and SBOM Generation
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
+      - name: Generate SBOM
+        run: |
+          npm install -g @cyclonedx/cdxgen@8.5.0
+          cdxgen -r -o sbom.xml
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
         with:
-          java-version: '11'
-          distribution: 'adopt'
+          name: sbom-artifact  
+          path: sbom.xml      
 
-  dependabot:
-    needs: maven_build
-    runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Dependabot
-        uses: dependabot/dependabot-action@v2
-        with:
-          github_token: ${{ secrets.SECRET_TOKEN }}
 
-    steps:               
-      - name: Dependabot Alert CSV Export
-        uses: ShamKarthikS-Hexaware/dependabot-alert-export@v1.0
-        with:        
-          GITHUB_TOKEN: ${{secrets.GH_TOKEN}}
-          org_name: 'ORG_NAME'
-          repo_name: 'REPO_NAME'
-          csv_path: data/vulnerability.csv
-          
-      - name: Upload Vulnerability report
-        uses: actions/upload-artifact@v3
-        with:
-           name: vulnerability_report
-           path: data/vulnerability.csv          
+
+      
