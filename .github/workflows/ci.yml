@@ -25,7 +25,7 @@ jobs:
           npm install -g @cyclonedx/cdxgen@8.5.0
           cdxgen -r -o sbom.xml
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: sbom-artifact  
           path: sbom.xml      
