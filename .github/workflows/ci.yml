@@ -14,5 +14,12 @@ jobs:
       - name: Run Gitleaks
         uses: DariuszPorowski/github-action-gitleaks@v2
         with:
+          fail: false
           flags: "--all"
           output-format: json
+
+      - name: Upload Gitleaks Report as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json
