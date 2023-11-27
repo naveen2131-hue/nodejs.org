@@ -16,14 +16,4 @@ jobs:
         uses: gitleaks/gitleaks-action@v2.3.2
         with:
           flags: "--all"
-          output-format: sarif
-
-      - name: Convert SARIF to JSON
-        run: |
-          npm install -g sarif2json
-          sarif2json < "${{ steps.gitleaks.outputs.sarif }}"
-        shell: bash
-
-      - name: Save JSON Report
-        run: |
-          mv converted-report.json result.json
+          output-format: "json"
