@@ -1,37 +1,25 @@
-name: CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  workflow_dispatch:
-
-env:
-  FORCE_COLOR: 2
+name: DefectDojo - Gitleaks
+on: [pull_request, push, workflow_dispatch]
 
 jobs:
-  build:
-    name: Build and SBOM Generation
+  gitleaks_scan:
+    name: Gitleaks Scan
     runs-on: ubuntu-latest
-
     steps:
-
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-      - name: Generate SBOM
-        run: |
-          npm install -g @cyclonedx/cdxgen@8.5.0
-          cdxgen -r -o sbom.xml
-      - name: Upload Artifact
+      - name: Run Gitleaks
+        uses: DariuszPorowski/github-action-gitleaks@v2
+        with:
+          fail: false
+          flags: "--all"
+          output-format: json
+
+      - name: Upload Gitleaks Report as Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: sbom-artifact  
-          path: sbom.xml      
-
-
-
-
-
-      
+          name: gitleaks-report
+          path: gitleaks-report.json
