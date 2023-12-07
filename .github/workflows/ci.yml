@@ -4,13 +4,12 @@ on: [pull_request, push, workflow_dispatch]
 jobs:
   SCA:
     name: SCA
-    runs-on: ubuntu-latest
+    runs-on: java-ci
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2 
 
       - name: Check Quality Gate
-        uses: DependencyTrack/quality-gate-action@v2
         with:
           apiKey: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
           url: https://uat-sca.m2pfintech.com/
