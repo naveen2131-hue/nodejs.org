@@ -1,37 +1,18 @@
-name: CI
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  workflow_dispatch:
-
-env:
-  FORCE_COLOR: 2
+name: ci.yml
+on: [pull_request, push, workflow_dispatch]
 
 jobs:
-  build:
-    name: Build and SBOM Generation
-    runs-on: ubuntu-latest
-
+  SCA:
+    name: SCA
+    runs-on: java-ci
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2 
 
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Generate SBOM
-        run: |
-          npm install -g @cyclonedx/cdxgen@8.5.0
-          cdxgen -r -o sbom.xml
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+      - name: Check Quality Gate
+        uses: DependencyTrack/quality-gate-action@v2
         with:
-          name: sbom-artifact  
-          path: sbom.xml      
-
-
-
-
-
-      
+          apiKey: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+          url: https://uat-sca.m2pfintech.com/
+          projectId: acs-backend
+          failOnError: true
