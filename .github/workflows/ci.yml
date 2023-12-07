@@ -10,8 +10,16 @@ jobs:
         uses: actions/checkout@v2 
 
       - name: Check Quality Gate
-        with:
-          apiKey: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
-          url: https://uat-sca.m2pfintech.com/
-          projectId: acs-backend
-          failOnError: true
+        run: |
+          riskScore=$(curl -s -X GET -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}" \
+            "https://uat-sca.m2pfintech.com/api/v1/project/acs-backend/current-state" | \
+            jq -r '.metrics.riskScore')
+
+          echo "Dependency-Track Risk Score: $riskScore"
+
+          if [ $riskScore -ge 1 ]; then
+            echo "Low risk detected. Failing the workflow."
+            exit 1
+          else
+            echo "No Low risk detected."
+          fi
