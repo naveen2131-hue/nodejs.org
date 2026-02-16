@@ -22,3 +22,6 @@ jobs:
       - name: install endorctl
         run: | 
           npm install -g endorctl
+
+      - name: endorctl
+        run: endorctl --version
