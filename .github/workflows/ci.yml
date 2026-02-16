@@ -1,27 +1,24 @@
-name: ci.yml
-on: [pull_request, push, workflow_dispatch]
+name: Defectdojo - endorlabs
+
+on:
+  push:
+    branches:
+      - "main"
 
 jobs:
-  SCA:
-    name: SCA
+  endorlabs:
     runs-on: ubuntu-latest
-    container:
-      image: naveen2131/my-app:baseimage
+
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2 
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-      - name: Check Quality Gates
-        run: |
-          riskScore=$(curl -s -X GET -H "X-Api-Key: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}" \
-            "https://uat-sca.m2pfintech.com/api/v1/project/acs-backend/current-state" | \
-            jq -r '.metrics.riskScore')
+      - name: setup node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'npm'
 
-          echo "Dependency-Track Risk Score: $riskScore"
-
-          if [ $riskScore -ge 1 ]; then
-            echo "Low risk detected. Failing the workflow."
-            exit 1
-          else
-            echo "No Low risk detected."
-          fi
+      - name: install endorctl
+        run: | 
+          npm install -g endorctl
